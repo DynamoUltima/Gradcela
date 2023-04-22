@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   async headers() {
+    
     return [
       {
         // matching all API routes
@@ -14,7 +15,7 @@ const nextConfig = {
         ]
       }
     ]
-  },
+  }, 
 
   // async rewrites() {
   //   return [
