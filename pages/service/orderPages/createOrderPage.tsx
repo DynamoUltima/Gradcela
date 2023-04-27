@@ -66,7 +66,7 @@ const CreateOrderPage = () => {
         console.log('clicked');
         console.log(values.projectName)
 
-        const response = await axios.post(`${BASE_URL}/api/projects/create`, {
+        const response = await axios.post(`${BASE_URL_PROD}/api/projects/create`, {
           // withCredentials: true,
           headers: {
             'Content-Type': 'application/json',
