@@ -33,9 +33,9 @@ export default NextAuth({
       credentials: {
         email: { label: "email", type: "text", placeholder: "" },
         password: { label: "Password", type: "text" },
-        // firstName: { label: "firstName", type: "text" },
-        // lastName: { label: "lastName", type: "text" },
-        // phone: { label: "phone", type: "text" },
+        firstName: { label: "firstName", type: "text" },
+        lastName: { label: "lastName", type: "text" },
+        phone: { label: "phone", type: "text" },
       },
       async authorize(credentials, req) {
         // console.log({credentials,text:'from next auth'});
@@ -44,39 +44,39 @@ export default NextAuth({
         console.log('welcome')
 
 
-      //  let user;
+       let user;
  
         let email = credentials?.email;
         let password = credentials?.password;
-        // let firstName = credentials?.firstName;
-        // let lastName = credentials?.lastName;
-        // let phone = credentials?.phone;
+        let firstName = credentials?.firstName;
+        let lastName = credentials?.lastName;
+        let phone = credentials?.phone;
         
         console.log('email')
         console.log(email)
 
-        // if(!credentials?.firstName){
+         if(!credentials?.firstName){
           const response = await axios.post('https://expeed-admin.vercel.app/api/signin', {
 
           email, password
         })
         
          console.log('sign in')
-        let user = response.data;
+         user = response.data;
 
-        // }
+         }
         // console.log('from next auth')
         // console.log(credentials) 
-      //  if(credentials?.firstName){
-      //   const response = await axios.post('https://expeed-admin.vercel.app/api/signup', {
+       if(credentials?.firstName){
+        const response = await axios.post('https://expeed-admin.vercel.app/api/signup', {
 
-      //     email, password,firstName,lastName,phone,role:'client'
-      //   })
+          email, password,firstName,lastName,phone,role:'client'
+        })
 
-      //   console.log('sign up')
+        console.log('sign up')
 
-      //   user = response.data;
-      //  } 
+        user = response.data;
+       } 
          
 
          

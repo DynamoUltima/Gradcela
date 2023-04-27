@@ -4,23 +4,26 @@ import Search from "../search";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import Image from "next/image";
+import gradcelaImage from "/assets/svg/GradcelaLogo.svg"
 
 const Navbar = () => {
-   const router =  useRouter()
-    const  handleLogout=async()=>{
-      const data = await signOut({redirect:false,});
-      console.log('sign out')
-      console.log(data)
-      router.push('/authPage')
-      
-    }
+  const router = useRouter()
+  const handleLogout = async () => {
+    const data = await signOut({ redirect: false, });
+    console.log('sign out')
+    console.log(data)
+    router.push('/authPage')
+
+  }
 
 
   return (
     <div className="flex flex-row justify-between p-2 items-center">
       <div className="flex flex-row justify-between p-2 items-center" >
-        <div className="font-bold mr-7 text-xl">Gradcela</div>
-
+        <Link href={'/businessPage'}>
+          <div className='w-20 h-10 relative flex items-center'><Image alt="logo" layout="contain" src={gradcelaImage} /></div>
+        </Link>
         {/* <Search /> */}
       </div>
 
@@ -29,8 +32,8 @@ const Navbar = () => {
         <button  className="bg-indigo-600 text-white rounded-md p-2 m-2 shadow-md"> New Order</button>
 
         </Link> */}
-        
-         <button  onClick={handleLogout}  className="bg-indigo-600 text-white rounded-md p-2 m-2 shadow-md"> Log Out</button>
+
+        <button onClick={handleLogout} className="bg-indigo-600 text-white rounded-md p-2 m-2 shadow-md"> Log Out</button>
 
         <MenuBar />
       </div>

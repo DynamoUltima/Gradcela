@@ -28,7 +28,7 @@ const nextConfig = {
   // },
   env: {
     NEXTAUTH_SECRET: "gradcela1126",
-    NEXTAUTH_URL: "https://expeed-admin.vercel.app"
+    // NEXTAUTH_URL: "https://expeed-admin.vercel.app"
   }
 }
 
