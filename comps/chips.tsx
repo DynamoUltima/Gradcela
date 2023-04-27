@@ -1,11 +1,11 @@
-import requests from "../utils/request";
+// import requests from "../utils/request";
 
 const Chips = () => {
-    requests
+    // requests
     return (
 
         <nav>
-            <div className="flex  space-x-7 whitespace-nowrap px-10 sm:px-20 overflow-x-scroll scrollbar-hide">
+            {/* <div className="flex  space-x-7 whitespace-nowrap px-10 sm:px-20 overflow-x-scroll scrollbar-hide">
                 {Object.entries(requests).map(([key, { title, url }]) => (
                     // <button key={title} className="order-last:pr-24 c">
                     //     {title}
@@ -17,7 +17,7 @@ const Chips = () => {
                         {title}
                     </button>
                 ))}
-            </div>
+            </div> */}
         </nav>
 
 
