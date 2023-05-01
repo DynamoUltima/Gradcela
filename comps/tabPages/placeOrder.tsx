@@ -22,7 +22,7 @@ const PlaceOrder = () => {
             <div className="flex items-center justify-center  h-full ">
 
                 <Link href={'/service/orderPages/createOrderPage'}>
-                    <button className="bg-indigo-600 text-white rounded-md p-2 m-2 shadow-md"> New Order</button>
+                    <button className="bg-[#2DD4BF]  text-white rounded-md p-2 m-2 shadow-md"> New Order</button>
 
                 </Link>
 

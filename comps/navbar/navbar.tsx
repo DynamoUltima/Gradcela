@@ -33,7 +33,7 @@ const Navbar = () => {
 
         </Link> */}
 
-        <button onClick={handleLogout} className="bg-indigo-600 text-white rounded-md p-2 m-2 shadow-md"> Log Out</button>
+        {/* <button onClick={handleLogout} className="bg-indigo-600 text-white rounded-md p-2 m-2 shadow-md"> Log Out</button> */}
 
         <MenuBar />
       </div>

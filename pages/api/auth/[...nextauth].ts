@@ -41,7 +41,7 @@ export default NextAuth({
         // console.log({credentials,text:'from next auth'});
         // Add logic here to look up the user from the credentials supplied
 
-        console.log('welcome')
+        // console.log('welcome')
 
 
        let user;
@@ -52,8 +52,8 @@ export default NextAuth({
         let lastName = credentials?.lastName;
         let phone = credentials?.phone;
         
-        console.log('email')
-        console.log(email)
+        console.log('firstName')
+        console.log(firstName)
 
          if(!credentials?.firstName){
           const response = await axios.post('https://expeed-admin.vercel.app/api/signin', {
@@ -67,13 +67,16 @@ export default NextAuth({
          }
         // console.log('from next auth')
         // console.log(credentials) 
-       if(credentials?.firstName){
-        const response = await axios.post('https://expeed-admin.vercel.app/api/signup', {
+       if(firstName){
+        console.log('signing up')
+        console.log(credentials)
+
+        const response = await axios.post('http://localhost:3001/api/signup', {
 
           email, password,firstName,lastName,phone,role:'client'
         })
 
-        console.log('sign up')
+        console.log(response.data)
 
         user = response.data;
        } 

@@ -1,8 +1,8 @@
 import Navbar from "../../../comps/navbar/navbar";
 import { useFormik } from 'formik';
 import moment, { Moment } from 'moment';
-// import { DatePicker, Space } from 'antd';
-// import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
+import { ToastContainer, toast } from 'react-toastify';
+
 
 
 import * as Yup from "yup";
@@ -16,6 +16,19 @@ import DateRangePicker from "tw-daterange"
 
 
 // const { RangePicker } = DatePicker;
+
+ interface IProject {
+  projectName: string;
+  price: string;
+  expertise: string;
+  campus: string;
+  description: string;
+  serviceType: string;
+  duration: {
+      startDate: Date;
+      endDate: Date;
+  };
+}
 
 const BASE_URL = "http://localhost:3001"
 const BASE_URL_PROD = "https://expeed-admin.vercel.app"
@@ -56,33 +69,55 @@ const CreateOrderPage = () => {
       //  duration: new Yup.ObjectSchema()
 
     }),
-    onSubmit: async (values) => {
+    onSubmit: async (values :IProject,{resetForm}) => {
+      
+      values.duration = value
+
       console.log(values);
       console.log('clicked');
-      values.duration=value
+
      
+    
+
 
       try {
         console.log('clicked');
         console.log(values.projectName)
+        
 
-        const response = await axios.post(`${BASE_URL_PROD}/api/projects/create`, {
+        const response = await axios.post(`${BASE_URL}/api/projects/create`, {
           // withCredentials: true,
-          headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${token}`
-          },
+          // headers: {
+          //   'Content-Type': 'application/json',
+          //   // 'Authorization': `Bearer ${token}`
+          // },
 
-          values,
+          values
 
         });
 
 
         console.log(response.data)
+       if(response.data.project){
+        toast.success(response.data.message, {
+          position: toast.POSITION.TOP_RIGHT,
+        })
+        resetForm()
+
+       }
+        
+
+        if(response.data.error){
+          toast.error(response.data.error.message, {
+            position: toast.POSITION.TOP_RIGHT,
+          })
+        }
 
       } catch (error) {
 
         console.log(error)
+        
+
 
       }
     }
@@ -224,12 +259,12 @@ const CreateOrderPage = () => {
                       </label>
                       <div className="mt-1 border border-gray-300 rounded-md shadow-sm  hover:border-indigo-500">
                         <Datepicker
-                      
-                        value={value}
-                        onChange={handleValueChange}
-                        showShortcuts={true}
+
+                          value={value}
+                          onChange={handleValueChange}
+                          showShortcuts={true}
                         // displayFormat={"DD/MM/YYYY"}
-                      />
+                        />
                         {/* <DateRangePicker
                           initialRange={formik.values.duration}
                           onUpdate={formik.handleChange}
@@ -274,7 +309,7 @@ const CreateOrderPage = () => {
                         className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
                         <option>Assignment</option>
-                        <option>Proposals</option>
+                        <option>Proposal</option>
                         <option>Thesis</option>
                       </select>
                     </div>
@@ -285,7 +320,7 @@ const CreateOrderPage = () => {
                   <button
                     type="submit"
 
-                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#2DD4BF] hover:bg-[#2DD4BF] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2DD4BF]"
                   >
                     Save
                   </button>
@@ -293,11 +328,12 @@ const CreateOrderPage = () => {
               </div>
             </form>
           </div>
-
+          
         </div>
 
 
       </div>
+      <ToastContainer />
     </>
 
   );
