@@ -71,7 +71,7 @@ export default NextAuth({
         console.log('signing up')
         console.log(credentials)
 
-        const response = await axios.post('http://localhost:3001/api/signup', {
+        const response = await axios.post('https://expeed-admin.vercel.app/api/signup', {
 
           email, password,firstName,lastName,phone,role:'client'
         })
