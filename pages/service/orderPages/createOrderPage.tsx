@@ -12,21 +12,23 @@ import TextEditor from "../../../comps/orderComps/textEditor";
 import axios from "axios";
 import Datepicker from "react-tailwindcss-datepicker";
 import DateRangePicker from "tw-daterange"
-
-
+import { ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage, } from "@/firebase/firebase";
+import { v4 } from 'uuid';
+import Dropzone from "@/comps/dropzone/dropzone";
 
 // const { RangePicker } = DatePicker;
 
- interface IProject {
+interface IProject {
   projectName: string;
   price: string;
-  expertise: string;
-  campus: string;
+  // expertise: string;
+  // campus: string;
   description: string;
   serviceType: string;
   duration: {
-      startDate: Date;
-      endDate: Date;
+    startDate: Date;
+    endDate: Date;
   };
 }
 
@@ -36,6 +38,11 @@ const BASE_URL_PROD = "https://expeed-admin.vercel.app"
 const CreateOrderPage = () => {
 
   const dateFormat = 'DD/MM/YYYY';
+  // const [file, setFiles] = useState<File>()
+  const [file, setFile] = useState<File>();
+  const [id,setId] = useState('');
+
+
 
 
   const [value, setValue] = useState({
@@ -43,15 +50,88 @@ const CreateOrderPage = () => {
     endDate: new Date()
   });
 
+  const metadata = {
+    contentType: 'image/jpeg',
+  };
 
+
+
+
+
+  // uploadBytesResumable
+
+
+
+  const handleUploads = () => {
+
+    //setFiles(event.target!.files![0])
+    uploadFiles()
+  }
+
+  const uploadFiles = () => {
+    if (file == null) return
+
+    const fileExtension = file.name.split('.').pop();
+    const uniqueFileName = v4();
+    const fileName = `${uniqueFileName}.${fileExtension}`;
+
+    const fileRef = ref(storage, `files/${fileName}`)
+
+    const uploadTask = uploadBytesResumable(fileRef, file)
+
+    const update={}
+
+
+
+    uploadTask.on('state_changed',
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+        console.log(error)
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
+          console.log('File available at', downloadURL);
+          const response = await axios.put(`${BASE_URL_PROD}/api/projects/${id}`, {
+            // withCredentials: true,
+            // headers: {
+            //   'Content-Type': 'application/json',
+            //   // 'Authorization': `Bearer ${token}`
+            // },
+  
+            mediaData:[{dateType:fileExtension,link:downloadURL}]
+  
+          });
+          console.log(response.data);
+        });
+        
+        // alert(`${file.name} uploaded successfully`)
+      }
+    );
+  }
 
 
   const formik = useFormik({
     initialValues: {
       projectName: '',
       price: '',
-      expertise: '',
-      campus: '',
+      // expertise: '',
+      // campus: '',
       description: '',
       serviceType: '',
       duration: { startDate: new Date(), endDate: new Date() }
@@ -62,28 +142,26 @@ const CreateOrderPage = () => {
         // .max(15, 'Must be 4 Characters or less')
         .required('Project name is a required field!!'),
       price: Yup.string().required('required'),
-      expertise: Yup.string(),
-      campus: Yup.string(),
+      // expertise: Yup.string(),
+      // campus: Yup.string(),
       description: Yup.string(),
       serviceType: Yup.string(),
       //  duration: new Yup.ObjectSchema()
 
     }),
-    onSubmit: async (values :IProject,{resetForm}) => {
-      
+    onSubmit: async (values: IProject, { resetForm }) => {
+
       values.duration = value
 
       console.log(values);
       console.log('clicked');
-
-     
-    
+      
 
 
       try {
         console.log('clicked');
         console.log(values.projectName)
-        
+
 
         const response = await axios.post(`${BASE_URL_PROD}/api/projects/create`, {
           // withCredentials: true,
@@ -95,19 +173,22 @@ const CreateOrderPage = () => {
           values
 
         });
+        // handleUploads()
 
 
         console.log(response.data)
-       if(response.data.project){
-        toast.success(response.data.message, {
-          position: toast.POSITION.TOP_RIGHT,
-        })
-        resetForm()
+        if (response.data.project) {
+          setId(response.data.project._id);
+          uploadFiles();
+          toast.success(response.data.message, {
+            position: toast.POSITION.TOP_RIGHT,
+          })
+          resetForm()
 
-       }
-        
+        }
 
-        if(response.data.error){
+
+        if (response.data.error) {
           toast.error(response.data.error.message, {
             position: toast.POSITION.TOP_RIGHT,
           })
@@ -116,7 +197,7 @@ const CreateOrderPage = () => {
       } catch (error) {
 
         console.log(error)
-        
+
 
 
       }
@@ -190,7 +271,7 @@ const CreateOrderPage = () => {
                       {formik.errors.price ? <p className='text-red-400 p-2'>{formik.errors.price} </p> : null}
                     </div>
 
-                    <div className="col-span-6 sm:col-span-4">
+                    {/* <div className="col-span-6 sm:col-span-4">
                       <label htmlFor="email-address" className="block text-sm font-medium text-gray-700">
                         Expertise
                       </label>
@@ -207,9 +288,9 @@ const CreateOrderPage = () => {
                         />
                       </div>
                       {formik.errors.expertise ? <p className='text-red-400 p-2'>{formik.errors.expertise} </p> : null}
-                    </div>
+                    </div> */}
 
-                    <div className="col-span-6 sm:col-span-3">
+                    {/* <div className="col-span-6 sm:col-span-3">
                       <label htmlFor="country" className="block text-sm font-medium text-gray-700">
                         Campus
                       </label>
@@ -227,7 +308,7 @@ const CreateOrderPage = () => {
                         <option>KNUST</option>
                         <option>UPSA</option>
                       </select>
-                    </div>
+                    </div> */}
 
                     <div className="col-span-6">
                       <label htmlFor="street-address" className="block text-sm font-medium text-gray-700">
@@ -316,6 +397,24 @@ const CreateOrderPage = () => {
 
                   </div>
                 </div>
+                {/* <div>
+                  <input
+                    type="file"
+                    onChange={handleUploads} 
+                    className=""
+                    />
+                </div> */}
+
+                <div className='m-4'>
+                  <h1 className=' text-xl font-bold'>Upload Files</h1>
+                  <Dropzone setFile={setFile} />
+                  
+                </div>
+                {/* <button onClick={()=>handleUploads} >
+                  upload
+                </button> */}
+
+
                 <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
                   <button
                     type="submit"
@@ -328,7 +427,7 @@ const CreateOrderPage = () => {
               </div>
             </form>
           </div>
-          
+
         </div>
 
 
