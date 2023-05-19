@@ -8,6 +8,9 @@ import Delivered from "../comps/tabPages/delivered";
 import Pending from "../comps/tabPages/pending";
 import PlaceOrder from "../comps/tabPages/placeOrder";
 import { navigation } from "../data/navigationData";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAllProjects } from "@/apiServices/services";
 
 
 
@@ -48,6 +51,13 @@ const BusinessPage = () => {
     //     router.push('/authPage')
         
     //   }
+    
+
+    const { data, isError, isLoading, error, isSuccess, } = useQuery(["getProjects"], fetchAllProjects, { keepPreviousData: true,  } );
+
+    console.log(data);
+    
+
     return (
         <div className="relative h-screen" >
              <Tab.Group as="div" className="mt-2 ">
@@ -56,7 +66,7 @@ const BusinessPage = () => {
 
 
                     <Navbar />
-                    <Tabbar />
+                    <Tabbar /> 
 
 
                     <div className="bg-gray-200  ">

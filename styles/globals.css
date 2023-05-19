@@ -45,3 +45,19 @@ input:focus {
 input::-moz-focus-inner {
   border: 0;
 }
+
+
+textarea {
+  font-size: 18px;
+  cursor: pointer;
+  border: none;
+  display: inline-block;
+  padding: 10px 20px;
+}
+textarea:focus {
+  outline: none;
+  box-shadow: none;
+}
+textarea::-moz-focus-inner {
+  border: 0;
+}

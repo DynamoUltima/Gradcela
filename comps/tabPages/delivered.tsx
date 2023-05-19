@@ -11,8 +11,8 @@ const Delivered = () => {
             <div className=" flex items-center font-bold mx-14 ">Delivered Orders</div>
 
             <div className="flex flex-col items-center overflow-y-auto space-y-4">
-                <OrderCards />
-                <OrderCards />
+                {/* <OrderCards /> */}
+                {/* <OrderCards /> */}
             </div>
 
 

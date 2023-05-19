@@ -115,12 +115,14 @@ const CreateOrderPage = () => {
             // },
   
             mediaData:[{dateType:fileExtension,link:downloadURL}]
+            
   
           });
+          setFile(undefined)
           console.log(response.data);
         });
         
-        // alert(`${file.name} uploaded successfully`)
+       // alert(`${file.name} uploaded successfully`)
       }
     );
   }

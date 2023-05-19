@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import gradcelaImage from "/assets/svg/GradcelaLogo.svg"
+import { useSession } from "next-auth/react";
 
 const Navigationbar = () => {
+
+    const { data: session } = useSession();
+
     return (
 
         <div className=''>
@@ -20,7 +24,7 @@ const Navigationbar = () => {
                 </div>
                 <Link href={'/authPage'}>
                     <button className='btn bg-white text-teal-300 border-none hover:bg-[#2DD4BF] p-2 hover:text-white capitalize rounded-full'>
-                        Coming Soon
+                        Signin
                     </button>
                 </Link>
                 {/* future sign in button*/}

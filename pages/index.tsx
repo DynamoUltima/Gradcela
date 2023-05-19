@@ -44,7 +44,7 @@ if (session?.user.data.role.includes('provider')) {
                 Get help with assignemnts, term projects, final thesis, school application essays, job cover resumes and more.
               </p>
               <Link href={'/businessPage'}>
-                <button className="btn btn-sm lg:btn-lg bg-[#2DD4BF] p-2 text-white rounded-full border-none w-36 lg:w-44 capitalize">Coming soon</button>
+                <button className="btn btn-sm lg:btn-lg bg-[#2DD4BF] p-2 text-white rounded-full border-none w-36 lg:w-44 capitalize">View Dashboard</button>
               </Link>
             </div>
             <div className='relative  w-12/12'><Image  alt="home" layout="cover"  src={Excellence} /></div>

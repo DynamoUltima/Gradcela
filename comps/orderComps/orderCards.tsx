@@ -1,9 +1,21 @@
+import { IProject } from '@/interfaces/interface.projects';
+import moment from 'moment';
 import React from 'react';
 
-const OrderCards = () => {
+const OrderCards = ({project}:{project:IProject}) => {
+
+    
+    const endDate = project.duration.endDate;
+    const formattedEnddate =moment(endDate).format('ddd, MMMM Do, YYYY ')
+    console.log(project)
+
+   // console.log(moment(endDate).format('ddd, MMMM Do, YYYY '))
+
+
+
     return (
       
-            <div className="flex  flex-wrap overflow-hidden space-x-4 justify-between rounded w-4/5 shadow-lg bg-gray-100 items-center p-10 " >
+            <div className="flex  flex-wrap overflow-hidden space-x-4 justify-between rounded w-auto shadow-lg bg-gray-100 items-center p-10 " >
 
                 <div className="h-full flex flex-col  pt-8 px-4 ">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -26,7 +38,6 @@ const OrderCards = () => {
                         </div>
                         {/* <ProgressBar /> */}
 
-                        {/* <div className="flex-grow "><ProgressBar /></div> */}
 
                     </div>
                
@@ -34,7 +45,7 @@ const OrderCards = () => {
                 <div className=" m-4  items-stretch ">
                     {/* <div className="inline-block"><p>Service Progress</p></div> */}
 
-                    <button className="bg-indigo-500 p-2 text-white text-sm rounded-3xl shadow-md hover:bg-indigo-400"> submit quote</button>
+                    <button className="bg-indigo-500 p-2 px-4 text-white text-sm rounded-3xl shadow-md hover:bg-indigo-400">{project.projectName} </button>
                     <div className="flex space-x-1 mt-4">
                         <div className="flex-grow text-sm">Delivery</div>
                         <div className="flex-grow text-sm">within 20 days</div>
@@ -73,7 +84,7 @@ const OrderCards = () => {
                             </div>
                         </div>
 
-                        <div className="p-1">Pending</div>
+                        <div className="p-1">{project.orderState[0]}</div>
 
                     </div>
                 
@@ -88,7 +99,7 @@ const OrderCards = () => {
                 </div>
 
 
-                <div className=" ">15th Dec 2021</div>
+                <div className=" ">{formattedEnddate}</div>
 
 
 
