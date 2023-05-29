@@ -84,7 +84,7 @@ const OrderCards = ({project}:{project:IProject}) => {
                             </div>
                         </div>
 
-                        <div className="p-1">{project.orderState[0]}</div>
+                        <div className="p-1">{project.orderState}</div>
 
                     </div>
                 
