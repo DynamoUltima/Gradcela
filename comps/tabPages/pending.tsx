@@ -2,16 +2,27 @@ import { Tab } from "@headlessui/react";
 import OrderCards from "../orderComps/orderCards";
 import ProgressBar from "../progressBar";
 import axios from "axios";
-import { fetchAllProjects } from "@/apiServices/services";
+import { fetchAllProjects, fetchProjectsById } from "@/apiServices/services";
 import { useQuery } from "@tanstack/react-query";
-import * as moment from 'moment';
 import { IProject } from "@/interfaces/interface.projects";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Pending = () => {
 
+    const { data: session } = useSession();
 
+    const router = useRouter()
+    const id =  session?.user.data._id;
 
-    const { data, isError, isLoading, error, isSuccess, } = useQuery(["getProjects"], fetchAllProjects, { keepPreviousData: true, });
+   
+    const getProjectsById =  () => {
+
+    
+       return fetchProjectsById(id!);
+    }
+
+    const { data, isError, isLoading, error, isSuccess, } = useQuery(["getProjects"], getProjectsById, { keepPreviousData: true, });
 
 
     //   console.log(data?.projects);

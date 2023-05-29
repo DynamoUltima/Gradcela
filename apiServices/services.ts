@@ -16,3 +16,15 @@ export const fetchAllProjects = async () => {
     return response.data;
 
 }
+
+export const fetchProjectsById = async (id:string) => {
+    const response = await axios.get(`${BASE_URL_PROD}/api/projects/get/${id}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            // 'Authorization': `Bearer ${token}`
+        }
+
+    });
+    return response.data;
+
+}

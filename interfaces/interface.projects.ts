@@ -1,15 +1,17 @@
 export interface IProject {
     duration:    Duration;
-    orderState:  string[];
-    _id:         string;
+    orderState?:  string[];
+    _id?:         string;
     projectName: string;
     description: string;
     price:       string;
-    serviceType: string[];
-    mediaData:   MediaDatum[];
-    created_on:  Date;
-    updated_on:  Date;
-    __v:         number;
+    orderId?:string;
+    serviceType: string;
+    mediaData?:   MediaDatum[];
+    created_on?:  Date;
+    updated_on?:  Date;
+    createdBy?: string;
+    __v?:         number;
 }
 
 export interface Duration {
@@ -20,4 +22,7 @@ export interface Duration {
 export interface MediaDatum {
     link: string;
     _id:  string;
+    fileSize:string;
+    fileName:string;
+    fileType:string;
 }

@@ -10,7 +10,7 @@ import PlaceOrder from "../comps/tabPages/placeOrder";
 import { navigation } from "../data/navigationData";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { fetchAllProjects } from "@/apiServices/services";
+import { fetchAllProjects, fetchProjectsById } from "@/apiServices/services";
 
 
 
@@ -21,7 +21,7 @@ function classNames(...classes: string[]) {
 
 // export async function getServerSideProps(context: GetSessionParams | undefined) {
 //     const session = await getSession(context);
-  
+
 //     if (!session?.user) {
 //       return {
 //         redirect: {
@@ -30,11 +30,11 @@ function classNames(...classes: string[]) {
 //         },
 //       };
 //     }
-  
+
 //     // const user = await prisma.user.findUnique({
 //     //   where: { id: session.userId },
 //     // });
-  
+
 //     return {
 //       props: { user :''},
 //     };
@@ -43,30 +43,36 @@ function classNames(...classes: string[]) {
 
 const BusinessPage = () => {
 
-   const router= useRouter()
-    
-//    const {data:session} =useSession()
+    const router = useRouter()
+
+    const { data: session } = useSession()
 
     // if(!session?.user){
     //     router.push('/authPage')
-        
+
     //   }
-    
 
-    const { data, isError, isLoading, error, isSuccess, } = useQuery(["getProjects"], fetchAllProjects, { keepPreviousData: true,  } );
+    const getProjectsById =  () => {
 
-    console.log(data);
-    
+        const id =  session?.user.data._id;
+       return fetchProjectsById(id!);
+    }
+
+
+    const { data:projectData, isError, isLoading, error, isSuccess, } = useQuery(["getProjects"], getProjectsById, { keepPreviousData: true, });
+
+    console.log(projectData);
+
 
     return (
         <div className="relative h-screen" >
-             <Tab.Group as="div" className="mt-2 ">
+            <Tab.Group as="div" className="mt-2 ">
 
                 <div className=" divide-y divide-black divide-opacity-25">
 
 
                     <Navbar />
-                    <Tabbar /> 
+                    <Tabbar />
 
 
                     <div className="bg-gray-200  ">

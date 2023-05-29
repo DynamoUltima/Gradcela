@@ -16,43 +16,57 @@ import { ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "firebase
 import { storage, } from "@/firebase/firebase";
 import { v4 } from 'uuid';
 import Dropzone from "@/comps/dropzone/dropzone";
+import { IProject } from "@/interfaces/interface.projects";
+import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 
 // const { RangePicker } = DatePicker;
 
-interface IProject {
-  projectName: string;
-  price: string;
-  // expertise: string;
-  // campus: string;
-  description: string;
-  serviceType: string;
-  duration: {
-    startDate: Date;
-    endDate: Date;
-  };
-}
+// interface IProject {
+//   projectName: string;
+//   price: string;
+//   // expertise: string;
+//   // campus: string;
+//   description: string;
+//   serviceType: string;
+//   duration: {
+//     startDate: Date;
+//     endDate: Date;
+//   };
+// }
 
 const BASE_URL = "http://localhost:3001"
-const BASE_URL_PROD = "https://expeed-admin.vercel.app"
+const BASE_URL_PROD = "https://expeed-admin.vercel.app";
+
 
 const CreateOrderPage = () => {
-
+  const { data: session ,status} = useSession();
   const dateFormat = 'DD/MM/YYYY';
   // const [file, setFiles] = useState<File>()
   const [file, setFile] = useState<File>();
   const [id,setId] = useState('');
+  const [name,setName] = useState('');
+  const [fileSize,setFileSize] = useState('');
+  const [fileType,setFileType] = useState('');
+
+
+  function generateOrderId(): string {
+    const timestamp = Date.now().toString(); // Get current timestamp
+    const randomNum = Math.floor(Math.random() * 10000).toString().padStart(4, '0'); // Generate a random number between 0 and 9999 and pad it with leading zeros if necessary
+    const orderId = `${timestamp}-${randomNum}`; // Concatenate the timestamp and random number
+  
+    return orderId;
+  }
 
 
 
 
-  const [value, setValue] = useState({
+  const [durationValue, setValue] = useState({
     startDate: new Date(),
     endDate: new Date()
   });
 
-  const metadata = {
-    contentType: 'image/jpeg',
-  };
+  
 
 
 
@@ -70,6 +84,9 @@ const CreateOrderPage = () => {
 
   const uploadFiles = () => {
     if (file == null) return
+    setName(file.name);
+    setFileSize(file.size.toString())
+    
 
     const fileExtension = file.name.split('.').pop();
     const uniqueFileName = v4();
@@ -80,6 +97,8 @@ const CreateOrderPage = () => {
     const uploadTask = uploadBytesResumable(fileRef, file)
 
     const update={}
+
+    setFileType(fileExtension!)
 
 
 
@@ -107,18 +126,23 @@ const CreateOrderPage = () => {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
           console.log('File available at', downloadURL);
+          console.log({dateType:fileType,link:downloadURL,fileName:name,fileSize:fileSize});
           const response = await axios.put(`${BASE_URL_PROD}/api/projects/${id}`, {
             // withCredentials: true,
             // headers: {
             //   'Content-Type': 'application/json',
             //   // 'Authorization': `Bearer ${token}`
             // },
+            
   
-            mediaData:[{dateType:fileExtension,link:downloadURL}]
+            mediaData:[{dateType:fileType,link:downloadURL,fileName:name,fileSize:fileSize}]
             
   
           });
           setFile(undefined)
+          setFileSize('')
+          setFileType('')
+          setName('')
           console.log(response.data);
         });
         
@@ -132,11 +156,11 @@ const CreateOrderPage = () => {
     initialValues: {
       projectName: '',
       price: '',
-      // expertise: '',
-      // campus: '',
       description: '',
       serviceType: '',
-      duration: { startDate: new Date(), endDate: new Date() }
+      duration: { startDate: new Date(), endDate: new Date() },
+      orderId: '',
+      createdBy:session?.user.data._id,
     },
     validateOnChange: false,
     validationSchema: Yup.object({
@@ -153,16 +177,18 @@ const CreateOrderPage = () => {
     }),
     onSubmit: async (values: IProject, { resetForm }) => {
 
-      values.duration = value
+      const orderId = generateOrderId();
 
+      values.duration = durationValue;
+      values.orderId =orderId;
       console.log(values);
-      console.log('clicked');
+      console.log('orderId');
       
 
 
       try {
         console.log('clicked');
-        console.log(values.projectName)
+        console.log(values)
 
 
         const response = await axios.post(`${BASE_URL_PROD}/api/projects/create`, {
@@ -205,6 +231,8 @@ const CreateOrderPage = () => {
       }
     }
   })
+
+
 
   // console.log(formik);
 
@@ -343,7 +371,7 @@ const CreateOrderPage = () => {
                       <div className="mt-1 border border-gray-300 rounded-md shadow-sm  hover:border-indigo-500">
                         <Datepicker
 
-                          value={value}
+                          value={durationValue}
                           onChange={handleValueChange}
                           showShortcuts={true}
                         // displayFormat={"DD/MM/YYYY"}
