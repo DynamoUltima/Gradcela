@@ -1,7 +1,7 @@
 import { Tab } from "@headlessui/react";
 import { getSession, GetSessionParams, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Navbar from "../comps/navbar/navbar";
 import Tabbar from "../comps/tabbar";
 import Delivered from "../comps/tabPages/delivered";
@@ -46,22 +46,33 @@ const BusinessPage = () => {
     const router = useRouter()
 
     const { data: session } = useSession()
+    const [userId, setUserId] = useState('')
 
     // if(!session?.user){
     //     router.push('/authPage')
 
     //   }
 
-    const getProjectsById =  () => {
 
-        const id =  session?.user.data._id;
-       return fetchProjectsById(id!);
+
+    const getProjectsById = () => {
+
+        console.log({userId:userId})
+        return fetchProjectsById(userId);
     }
 
 
-    const { data:projectData, isError, isLoading, error, isSuccess, } = useQuery(["getProjects"], getProjectsById, { keepPreviousData: true, });
+    const { data: projectData, isError, isLoading, error, isSuccess, } = useQuery(["getProjects"], getProjectsById, { keepPreviousData: true, });
 
-    console.log(projectData);
+    console.log({projects:projectData});
+
+    useEffect(() => {
+        const id = session?.user.data._id;
+        if (session?.user.data._id.toString() != null) {
+            setUserId(session?.user.data._id)
+        }
+
+    }, [])
 
 
     return (

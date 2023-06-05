@@ -6,12 +6,14 @@ import OrderCards from "../orderCards";
 import { fetchAllProjects } from "@/apiServices/services";
 import { useQuery } from "@tanstack/react-query";
 import { IProject } from "@/interfaces/interface.projects";
+import { useSession } from "next-auth/react";
 
 
 const PendingOrder = () => {
+    const {status} =useSession();
 
     const { data, isError, isLoading, error, isSuccess, } = useQuery(["getProjects"], fetchAllProjects, { keepPreviousData: true, });
-
+     console.log({'status':status})
     return (
         <div>
 
@@ -26,6 +28,7 @@ const PendingOrder = () => {
                     <OrderCards />
                     <OrderCards />
                     <OrderCards /> */}
+
 
                     {data?.projects.map((project: IProject) => (
                         <div className="flex" key={project._id}>

@@ -7,24 +7,34 @@ import { useQuery } from "@tanstack/react-query";
 import { IProject } from "@/interfaces/interface.projects";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 
 const Pending = () => {
 
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
 
     const router = useRouter()
-    const id =  session?.user.data._id;
-
-   
-    const getProjectsById =  () => {
-
+    const [userId, setUserId] = useState('')
     
-       return fetchProjectsById(id!);
+    console.log({ status: status });
+    // console.log({'mySession':session});
+    console.log({ 'userId': userId })
+
+    const getProjectsById = () => {
+        // const id = session!.user.data._id;
+        console.log({ 'userId Pro': userId })
+        return fetchProjectsById(userId);
     }
 
     const { data, isError, isLoading, error, isSuccess, } = useQuery(["getProjects"], getProjectsById, { keepPreviousData: true, });
 
+    useEffect(() => {
+        
+        if (session?.user.data._id) {
+            setUserId(session?.user.data._id)
+        }
 
+    }, [])
     //   console.log(data?.projects);
     return (
         <Tab.Panel className=" flex flex-col pt-10 pb-8 px-4 space-y-4 bg-gray-200  " >

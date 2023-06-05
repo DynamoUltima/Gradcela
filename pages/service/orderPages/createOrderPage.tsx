@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 
 import * as Yup from "yup";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextEditor from "../../../comps/orderComps/textEditor";
 // import Datepicker from "react-tailwindcss-datepicker";
 import axios from "axios";
@@ -45,9 +45,9 @@ const CreateOrderPage = () => {
   // const [file, setFiles] = useState<File>()
   const [file, setFile] = useState<File>();
   const [id,setId] = useState('');
-  const [name,setName] = useState('');
-  const [fileSize,setFileSize] = useState('');
-  const [fileType,setFileType] = useState('');
+  // const [name,setName] = useState('');
+  // const [fileSize,setFileSize] = useState('');
+  // const [fileType,setFileType] = useState('');
 
 
   function generateOrderId(): string {
@@ -66,6 +66,8 @@ const CreateOrderPage = () => {
     endDate: new Date()
   });
 
+  console.log({'project id home':id});
+
   
 
 
@@ -76,16 +78,16 @@ const CreateOrderPage = () => {
 
 
 
-  const handleUploads = () => {
+  // const handleUploads = () => {
 
-    //setFiles(event.target!.files![0])
-    uploadFiles()
-  }
+  //   //setFiles(event.target!.files![0])
+  //   uploadFiles()
+  // }
 
-  const uploadFiles = () => {
+  const uploadFiles = (projectId:string) => {
     if (file == null) return
-    setName(file.name);
-    setFileSize(file.size.toString())
+    // setName(file.name);
+    // setFileSize(file.size.toString())
     
 
     const fileExtension = file.name.split('.').pop();
@@ -98,7 +100,8 @@ const CreateOrderPage = () => {
 
     const update={}
 
-    setFileType(fileExtension!)
+    // setFileType(fileExtension!)
+    
 
 
 
@@ -126,8 +129,11 @@ const CreateOrderPage = () => {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
           console.log('File available at', downloadURL);
-          console.log({dateType:fileType,link:downloadURL,fileName:name,fileSize:fileSize});
-          const response = await axios.put(`${BASE_URL_PROD}/api/projects/${id}`, {
+          console.log({'project id':id});
+          console.log({file:file})
+          //mediaData:[{dateType:fileType,link:downloadURL,fileName:name,fileSize:fileSize}]
+        //  console.log({dateType:fileType,link:downloadURL,fileName:name,fileSize:fileSize});
+          const response = await axios.put(`${BASE_URL_PROD}/api/projects/${projectId}`, {
             // withCredentials: true,
             // headers: {
             //   'Content-Type': 'application/json',
@@ -135,14 +141,14 @@ const CreateOrderPage = () => {
             // },
             
   
-            mediaData:[{dateType:fileType,link:downloadURL,fileName:name,fileSize:fileSize}]
+            mediaData:[{dateType:file.type,link:downloadURL,fileName:file.name,fileSize:file.size.toString()}]
             
   
           });
           setFile(undefined)
-          setFileSize('')
-          setFileType('')
-          setName('')
+          // setFileSize('')
+          // setFileType('')
+          // setName('')
           console.log(response.data);
         });
         
@@ -192,11 +198,7 @@ const CreateOrderPage = () => {
 
 
         const response = await axios.post(`${BASE_URL_PROD}/api/projects/create`, {
-          // withCredentials: true,
-          // headers: {
-          //   'Content-Type': 'application/json',
-          //   // 'Authorization': `Bearer ${token}`
-          // },
+         
 
           values
 
@@ -204,10 +206,11 @@ const CreateOrderPage = () => {
         // handleUploads()
 
 
-        console.log(response.data)
+        console.log({'response data':response.data})
         if (response.data.project) {
-          setId(response.data.project._id);
-          uploadFiles();
+          setId(response.data.project._id.toString());
+          console.log({'response id':response.data.project._id});
+          uploadFiles(response.data.project._id);
           toast.success(response.data.message, {
             position: toast.POSITION.TOP_RIGHT,
           })
@@ -232,7 +235,9 @@ const CreateOrderPage = () => {
     }
   })
 
+useEffect(()=>{
 
+},[])
 
   // console.log(formik);
 
