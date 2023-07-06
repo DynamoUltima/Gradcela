@@ -4,10 +4,10 @@ import React from 'react';
 
 const OrderCards = ({project}:{project:IProject}) => {
 
-    
-    const endDate = project.duration.endDate;
+    console.log('project',project)
+    const endDate = project.duration.endDate??"";
     const formattedEnddate =moment(endDate).format('ddd, MMMM Do, YYYY ')
-    console.log(project)
+   
 
    // console.log(moment(endDate).format('ddd, MMMM Do, YYYY '))
 

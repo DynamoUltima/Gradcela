@@ -27,14 +27,14 @@ const Pending = () => {
     }
 
     const { data, isError, isLoading, error, isSuccess, } = useQuery(["getProjects"], getProjectsById, { keepPreviousData: true, });
-
+      console.log("data",isSuccess)
     useEffect(() => {
         
         if (session?.user.data._id) {
             setUserId(session?.user.data._id)
         }
 
-    }, [])
+    }, [session])
     //   console.log(data?.projects);
     return (
         <Tab.Panel className=" flex flex-col pt-10 pb-8 px-4 space-y-4 bg-gray-200  " >
@@ -43,17 +43,18 @@ const Pending = () => {
 
 
             <div className="flex flex-col items-center justify-center overflow-y-auto space-y-4">
-                {data?.projects.map((project: IProject) => (
+
+
+              { isSuccess ? (
+
+                data?.projects.map((project: IProject) => (
                     <li key={project._id}>
                         <OrderCards project={project} />
                     </li>
 
-                ))}
-
-
-
-
-
+                ))):(
+                    <div>Empty</div>
+                )}
             </div>
 
 
